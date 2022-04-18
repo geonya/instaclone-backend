@@ -1,0 +1,19 @@
+{
+	"name": "instaclone",
+	"version": "1.0.0",
+	"description": "",
+	"scripts": {
+		"dev": ""
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/geonya/instaclone-backend.git"
+	},
+	"keywords": [],
+	"author": "geony",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/geonya/instaclone-backend/issues"
+	},
+	"homepage": "https://github.com/geonya/instaclone-backend#readme"
+}
