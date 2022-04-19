@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"description": "",
 	"scripts": {
-		"dev": ""
+		"dev": "nodemon --exec babel-node server"
 	},
 	"repository": {
 		"type": "git",
@@ -15,5 +15,16 @@
 	"bugs": {
 		"url": "https://github.com/geonya/instaclone-backend/issues"
 	},
-	"homepage": "https://github.com/geonya/instaclone-backend#readme"
+	"homepage": "https://github.com/geonya/instaclone-backend#readme",
+	"dependencies": {
+		"apollo-server": "^3.6.7",
+		"apollo-server-core": "^3.6.7",
+		"graphql": "^16.3.0"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.17.9",
+		"@babel/node": "^7.16.8",
+		"@babel/preset-env": "^7.16.11",
+		"nodemon": "^2.0.15"
+	}
 }
