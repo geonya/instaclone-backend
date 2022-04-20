@@ -7,4 +7,6 @@ const server = new ApolloServer({
 	schema,
 });
 
-server.listen(PORT).then(() => console.log(`🚀 Server ready at ${PORT} ✅`));
+server
+	.listen(PORT)
+	.then(() => console.log(`🚀 Server ready at http://localhost:${PORT} ✅`));

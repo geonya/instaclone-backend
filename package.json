@@ -2,7 +2,6 @@
 	"name": "instaclone",
 	"version": "1.0.0",
 	"description": "",
-	"main": "dist/server.js",
 	"scripts": {
 		"dev": "nodemon --exec babel-node server",
 		"migrate": "npx prisma migrate dev --preview-feature",
