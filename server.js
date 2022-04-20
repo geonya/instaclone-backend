@@ -1,9 +1,8 @@
 import { ApolloServer } from "apollo-server";
-import { resolvers } from "./schema";
+import schema from "./schema";
 
 const server = new ApolloServer({
-	typeDefs,
-	resolvers,
+	schema,
 });
 server.listen().then(({ url }) => {
 	console.log(`🚀  Server ready at ${url}`);
