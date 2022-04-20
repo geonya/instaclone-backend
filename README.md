@@ -1,4 +1,1 @@
-# Insta Clone
-
-- [ ] ApolloServer Serup
-- [ ] Babel Setup
+# Insta Clone Backend
