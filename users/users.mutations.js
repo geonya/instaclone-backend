@@ -1,5 +1,5 @@
 import client from "../client";
-
+import bcrypt from "bcrypt";
 export default {
 	Mutation: {
 		createAccount: async (
@@ -12,9 +12,19 @@ export default {
 					OR: [{ username }, { email }],
 				},
 			});
-
+			console.log(existingUser);
 			// hash password
+			const uglyPassword = await bcrypt.hash(password, 10);
 			// save and return user
+			return client.user.create({
+				data: {
+					firstName,
+					lastName,
+					username,
+					email,
+					password: uglyPassword,
+				},
+			});
 		},
 	},
 };
