@@ -1,4 +1,4 @@
-import { gql } from "apollo-server";
+import { gql } from "apollo-server-express";
 
 export default gql`
 	type EditProileResult {
@@ -13,6 +13,7 @@ export default gql`
 			email: String
 			password: String
 			bio: String
+			avatar: Upload
 		): EditProileResult
 	}
 	scalar Upload

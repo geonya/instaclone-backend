@@ -5,10 +5,12 @@ import { typeDefs, resolvers } from "./schema";
 import { getUser } from "./users/users.utils";
 import { graphqlUploadExpress } from "graphql-upload";
 import * as express from "express";
+import * as logger from "morgan";
 
 const PORT = process.env.PORT;
 const startServer = async () => {
 	const app = express();
+	app.use(logger("tiny"));
 	app.use(graphqlUploadExpress());
 	const server = new ApolloServer({
 		typeDefs,

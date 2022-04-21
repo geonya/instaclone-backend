@@ -2,7 +2,7 @@ import * as jwt from "jsonwebtoken";
 import client from "../client";
 import { Resolver } from "../types";
 
-export const getUser = async (token) => {
+export const getUser = async (token: string) => {
 	try {
 		if (!token) {
 			return null;
