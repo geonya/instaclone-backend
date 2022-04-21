@@ -1,10 +1,10 @@
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import client from "../../client";
+import * as bcrypt from "bcrypt";
+import * as jwt from "jsonwebtoken";
+import { protectedResolver } from "../users.utils";
 
 export default {
 	Mutation: {
-		login: async (_, { username, password }) => {
+		login: protectedResolver(async (_, { username, password }, { client }) => {
 			// find user with args.username
 			const user = await client.user.findFirst({ where: { username } });
 			if (!user) {
@@ -26,6 +26,6 @@ export default {
 				ok: true,
 				token,
 			};
-		},
+		}),
 	},
 };

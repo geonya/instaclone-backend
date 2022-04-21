@@ -1,5 +1,4 @@
-import client from "../../client";
-import bcrypt from "bcrypt";
+import * as bcrypt from "bcrypt";
 import { protectedResolver } from "../users.utils";
 
 export default {
@@ -8,7 +7,7 @@ export default {
 			async (
 				_,
 				{ firstName, lastName, username, email, password: newPassword },
-				{ loggedInUser }
+				{ loggedInUser, client }
 			) => {
 				let uglyPassword = null;
 				if (newPassword) {
