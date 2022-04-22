@@ -20,5 +20,17 @@ export default {
 					},
 				},
 			}),
+		isMe: ({ id }, _: any, { loggedInUser }) => {
+			if (!loggedInUser) return false;
+			return id === loggedInUser.id;
+		},
+		isFollowing: async ({ id }, _: any, { loggedInUser, client }) => {
+			if (!loggedInUser) return false;
+			if (id === loggedInUser.id) return false;
+			const exists = await client.user.count({
+				where: { username: loggedInUser.username, following: { some: { id } } },
+			});
+			return Boolean(exists);
+		},
 	},
 };
