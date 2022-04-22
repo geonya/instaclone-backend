@@ -10,7 +10,8 @@ import * as logger from "morgan";
 const PORT = process.env.PORT;
 const startServer = async () => {
 	const app = express();
-	app.use(logger("tiny"));
+	app.use(logger("tiny")); // logger should be on top
+	app.use("/static", express.static("uploads"));
 	app.use(graphqlUploadExpress());
 	const server = new ApolloServer({
 		typeDefs,
