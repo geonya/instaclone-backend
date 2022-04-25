@@ -1,8 +1,9 @@
 import * as bcrypt from "bcrypt";
+
 export default {
 	Mutation: {
 		createAccount: async (
-			_,
+			_: any,
 			{ firstName, lastName, username, email, password },
 			{ client }
 		) => {

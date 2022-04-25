@@ -8,6 +8,7 @@ export default {
 					where: {
 						username,
 					},
+					select: { id: true },
 				});
 				if (!ok) {
 					return {
