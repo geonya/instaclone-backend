@@ -20,9 +20,8 @@ export default {
 			}),
 	},
 	Hashtag: {
-		photos: ({ id }, { page }) => {
-			console.log(page);
-			return client.hashtag
+		photos: ({ id }, { page }) =>
+			client.hashtag
 				.findUnique({
 					where: {
 						id,
@@ -31,8 +30,7 @@ export default {
 				.photos({
 					take: 10,
 					skip: (page - 1) * 10,
-				});
-		},
+				}),
 		totalPhotos: ({ id }, _: any, { client }) =>
 			client.photo.count({
 				where: {

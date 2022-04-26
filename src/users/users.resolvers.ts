@@ -32,5 +32,13 @@ export default {
 			});
 			return Boolean(exists);
 		},
+		photos: ({ id }, _: any, { client }) =>
+			client.user
+				.findUnique({
+					where: {
+						id,
+					},
+				})
+				.photos(),
 	},
 };
