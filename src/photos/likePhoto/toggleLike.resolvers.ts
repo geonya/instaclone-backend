@@ -39,6 +39,9 @@ export default {
 						},
 					});
 				}
+				return {
+					ok: true,
+				};
 			}
 		),
 	},
