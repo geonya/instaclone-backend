@@ -25,6 +25,9 @@ export default {
 					photoId: id,
 				},
 			}),
+		isMine: ({ userId }, _: any, { loggedInUser }) =>
+			// if loggedInUser null ?
+			userId === loggedInUser?.id,
 	},
 	Hashtag: {
 		photos: ({ id }, { page }) =>

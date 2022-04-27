@@ -20,10 +20,7 @@ export default {
 					},
 				},
 			}),
-		isMe: ({ id }, _: any, { loggedInUser }) => {
-			if (!loggedInUser) return false;
-			return id === loggedInUser.id;
-		},
+		isMe: ({ id }, _: any, { loggedInUser }) => id === loggedInUser?.id,
 		isFollowing: async ({ id }, _: any, { loggedInUser, client }) => {
 			if (!loggedInUser) return false;
 			if (id === loggedInUser.id) return false;
