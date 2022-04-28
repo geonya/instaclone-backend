@@ -5,7 +5,4 @@ export default gql`
 		ok: Boolean!
 		error: String
 	}
-	type Mutation {
-		toggleLike(id: Int!): MutationResponse
-	}
 `;
