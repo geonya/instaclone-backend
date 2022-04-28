@@ -2,6 +2,7 @@ import * as bcrypt from "bcrypt";
 import { GraphQLUpload } from "graphql-upload";
 import { protectedResolver } from "../users.utils";
 import { createWriteStream } from "fs";
+import { uploadPhoto } from "../../shared/shared.utils";
 
 export default {
 	Mutation: {
@@ -19,17 +20,18 @@ export default {
 				},
 				{ loggedInUser, client }
 			) => {
-				// file upload in local - 실전에서는 aws cloud 를 사용하기 때문에 다른 방법을 사용함
 				let avatarUrl = null;
 				if (avatar) {
-					const { filename, createReadStream } = await avatar;
+					avatarUrl = await uploadPhoto(avatar, loggedInUser.id);
+					// upload in local ->
+					/* 		const { filename, createReadStream } = await avatar;
 					const newFilename = `${loggedInUser.id}-${Date.now()}-${filename}`;
 					const readStream = createReadStream();
 					const writeStream = createWriteStream(
 						process.cwd() + "/uploads/" + newFilename
 					);
 					readStream.pipe(writeStream);
-					avatarUrl = `http://localhost:4000/static/${newFilename}`;
+					avatarUrl = `http://localhost:4000/static/${newFilename}`; */
 				}
 				let uglyPassword = null;
 				if (newPassword) {
