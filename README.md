@@ -45,8 +45,10 @@ Instaclone Backend.
 
 ## DMs
 
-- [x] See Room
+- [x] See Rooms
 - [x] Send Message
   - [x] Create Room (첫번째 메시지를 보낼 때 자동으로 create)
-- [ ] See Rooms
+- [x] See Room
+- [ ] Computed Fields (Seen 기능)
+- [ ] See Messages
 - [ ] Realtime Messages
