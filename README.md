@@ -49,6 +49,6 @@ Instaclone Backend.
 - [x] Send Message
   - [x] Create Room (첫번째 메시지를 보낼 때 자동으로 create)
 - [x] See Room
-- [ ] Computed Fields (Seen 기능)
-- [ ] See Messages
+- [x] Computed Fields (Seen 기능)
+- [x] see (Read) Messages
 - [ ] Realtime Messages

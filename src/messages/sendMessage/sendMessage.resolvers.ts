@@ -18,17 +18,39 @@ export default {
 					};
 				}
 				if (userId) {
-					const user = await client.user.findUnique({
-						where: { id: userId },
+					// 내가 그 사람을 follow하고 있는 경우에만 방을 만들 수 있음
+					const user = await client.user.findFirst({
+						where: { id: userId, following: { some: { id: loggedInUser.id } } },
 						select: { id: true },
 					});
-					// - [ ] 맞팔 유저끼리만 대화가 가능하도록
 					if (!user) {
 						return {
 							ok: false,
 							error: "The user does not exist.",
 						};
 					}
+
+					// 방이 이미 존재하는지 확인
+					const existRoom = await client.room.findFirst({
+						where: {
+							id: roomId,
+							users: {
+								some: {
+									id: userId,
+								},
+							},
+						},
+						select: {
+							id: true,
+						},
+					});
+					if (existRoom) {
+						return {
+							ok: false,
+							error: "The Room already exist.",
+						};
+					}
+					// --------------------
 					room = await client.room.create({
 						data: {
 							users: { connect: [{ id: userId }, { id: loggedInUser.id }] },
@@ -46,6 +68,7 @@ export default {
 						error: "Room not found.",
 					};
 				}
+
 				await client.message.create({
 					data: {
 						payload,
