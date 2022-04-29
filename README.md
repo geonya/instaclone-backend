@@ -46,7 +46,7 @@ Instaclone Backend.
 ## DMs
 
 - [x] See Room
-- [ ] Send Message
-  - [ ] Create Room (첫번째 메시지를 보낼 때 자동으로 create)
+- [x] Send Message
+  - [x] Create Room (첫번째 메시지를 보낼 때 자동으로 create)
 - [ ] See Rooms
 - [ ] Realtime Messages
