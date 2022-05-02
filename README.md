@@ -51,4 +51,4 @@ Instaclone Backend.
 - [x] See Room
 - [x] Computed Fields (Seen 기능)
 - [x] see (Read) Messages
-- [ ] Realtime Messages
+- [x] Realtime Messages(GraphQL Subscription)

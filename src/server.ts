@@ -23,14 +23,15 @@ const startServer = async () => {
 			schema,
 			execute,
 			subscribe,
-			onConnect: async ({ token }, webSocket, context) => {
+			// onConnect 는 첫 번재 인자로 HTTP Headers 를 가져옴
+			onConnect: async ({ token }) => {
 				if (!token) {
 					throw new Error("You are not athorized.");
 				}
 				const loggedInUser = await getUser(token);
-				console.log("connected!");
 				return {
 					loggedInUser,
+					client,
 				};
 			},
 		},
