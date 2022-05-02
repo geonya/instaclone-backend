@@ -6,28 +6,50 @@ import { getUser } from "./users/users.utils";
 import { graphqlUploadExpress } from "graphql-upload";
 import * as express from "express";
 import * as logger from "morgan";
+import { createServer } from "http";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import { SubscriptionServer } from "subscriptions-transport-ws";
+import { execute, subscribe } from "graphql/execution";
 
-const PORT = process.env.PORT;
 const startServer = async () => {
 	const app = express();
-	app.use(logger("tiny")); // logger should be on top
-	app.use("/static", express.static("uploads"));
+	app.use(logger("dev")); // logger should be on top
 	app.use(graphqlUploadExpress());
-	const server = new ApolloServer({
-		typeDefs,
-		resolvers,
+	app.use("/static", express.static("uploads"));
+	const schema = makeExecutableSchema({ typeDefs, resolvers });
+	const httpServer = createServer(app);
+	const subscriptionServer = SubscriptionServer.create(
+		{ schema, execute, subscribe },
+		{ server: httpServer, path: "/graphql" }
+	);
+	const apolloServer = new ApolloServer({
+		schema,
 		context: async ({ req }) => {
-			return {
-				loggedInUser: await getUser(req.headers.token),
-				client,
-			};
+			if (req) {
+				return {
+					loggedInUser: await getUser(req.headers.token),
+					client,
+				};
+			}
 		},
+		plugins: [
+			{
+				async serverWillStart() {
+					return {
+						async drainServer() {
+							subscriptionServer.close();
+						},
+					};
+				},
+			},
+		],
 	});
-	await server.start();
-	server.applyMiddleware({ app });
-	await new Promise<void>((resolve) => app.listen({ port: PORT }, resolve));
-	console.log(
-		`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath} ✅`
+	await apolloServer.start();
+	apolloServer.applyMiddleware({ app });
+	httpServer.listen(process.env.PORT, () =>
+		console.log(
+			`🚀 Server ready at http://localhost:${process.env.PORT}${apolloServer.graphqlPath} ✅`
+		)
 	);
 };
 startServer();
