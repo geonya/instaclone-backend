@@ -6,20 +6,30 @@ import pubsub from "../../pubsub";
 export default {
 	Subscription: {
 		roomUpdates: {
-			subscribe: async (root, args, context, info) => {
-				const room = await client.room.findUnique({
-					where: { id: args.id },
+			subscribe: async (_: any, { id }, { loggedInUser }) => {
+				const room = await client.room.findFirst({
+					where: { id, users: { some: { id: loggedInUser.id } } },
 					select: { id: true },
 				});
+
 				if (!room) {
 					throw new Error("You shall not see this.");
 				}
 				return withFilter(
 					() => pubsub.asyncIterator(NEW_MESSAGE),
-					({ roomUpdates }, { id }) => {
-						return roomUpdates.roomId === id;
+					async ({ roomUpdates }, { id }, { loggedInUser }) => {
+						if (roomUpdates.roomId === id) {
+							const room = await client.room.findFirst({
+								where: { id, users: { some: { id: loggedInUser.id } } },
+								select: { id: true },
+							});
+							if (!room) {
+								return false;
+							}
+							return true;
+						}
 					}
-				)(root, args, context, info);
+				)(_, { id }, { loggedInUser });
 			},
 		},
 	},

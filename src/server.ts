@@ -19,7 +19,21 @@ const startServer = async () => {
 	const schema = makeExecutableSchema({ typeDefs, resolvers });
 	const httpServer = createServer(app);
 	const subscriptionServer = SubscriptionServer.create(
-		{ schema, execute, subscribe },
+		{
+			schema,
+			execute,
+			subscribe,
+			onConnect: async ({ token }, webSocket, context) => {
+				if (!token) {
+					throw new Error("You are not athorized.");
+				}
+				const loggedInUser = await getUser(token);
+				console.log("connected!");
+				return {
+					loggedInUser,
+				};
+			},
+		},
 		{ server: httpServer, path: "/graphql" }
 	);
 	const apolloServer = new ApolloServer({
