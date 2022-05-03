@@ -12,10 +12,16 @@ const resolvers: Resolvers = {
 						error: "userid or roomId is required.",
 					};
 				}
-				if (userId && !roomId) {
+				// userId & roomId can co-exist
+				if (userId) {
 					const user = await client.user.findFirst({
 						where: {
 							id: userId,
+							followers: {
+								some: {
+									id: loggedInUser.id,
+								},
+							},
 						},
 						select: {
 							id: true,
@@ -27,17 +33,38 @@ const resolvers: Resolvers = {
 							error: "user doesn't exist.",
 						};
 					}
-					room = await client.room.create({
-						data: {
-							users: {
-								connect: [{ id: userId }, { id: loggedInUser.id }],
-							},
+					// find existing room with this user
+					room = await client.room.findFirst({
+						where: {
+							AND: [
+								{ users: { some: { id: userId } } },
+								{ users: { some: { id: loggedInUser.id } } },
+							],
+						},
+						select: {
+							id: true,
 						},
 					});
+					// if no room, create
+					if (!room) {
+						room = await client.room.create({
+							data: {
+								users: {
+									connect: [{ id: userId }, { id: loggedInUser.id }],
+								},
+							},
+						});
+					}
+					// definately, there is room, but is that room contain us ?
 				} else if (roomId) {
-					room = await client.room.findUnique({
+					room = await client.room.findFirst({
 						where: {
 							id: roomId,
+							users: {
+								some: {
+									id: loggedInUser.id,
+								},
+							},
 						},
 						select: {
 							id: true,
