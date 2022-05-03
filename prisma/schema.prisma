@@ -84,9 +84,9 @@ model Room {
 
 model Message {
   id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  room      Room     @relation(fields: [roomId], references: [id])
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
   roomId    Int
   payload   String
   read      Boolean  @default(false)
