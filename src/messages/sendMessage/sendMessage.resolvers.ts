@@ -22,7 +22,7 @@ export default {
 				if (userId) {
 					// 내가 그 사람을 follow하고 있는 경우에만 방을 만들 수 있음
 					const user = await client.user.findFirst({
-						where: { id: userId, following: { some: { id: loggedInUser.id } } },
+						where: { id: userId, followers: { some: { id: loggedInUser.id } } },
 						select: { id: true },
 					});
 					if (!user) {
