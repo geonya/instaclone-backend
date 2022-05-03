@@ -55,7 +55,6 @@ const resolvers: Resolvers = {
 							},
 						});
 					}
-					// definately, there is room, but is that room contain us ?
 				} else if (roomId) {
 					room = await client.room.findFirst({
 						where: {
