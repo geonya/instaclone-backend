@@ -1,44 +1,25 @@
-import { NEW_MESSAGE } from "../../constants";
-import pubsub from "../../pubsub";
+import { Resolvers } from "../../types";
 import { protectedResolver } from "../../users/users.utils";
 
-export default {
+const resolvers: Resolvers = {
 	Mutation: {
 		sendMessage: protectedResolver(
 			async (_: any, { payload, roomId, userId }, { client, loggedInUser }) => {
 				let room = null;
-				if (roomId === undefined && userId === undefined) {
+				if (userId === undefined && roomId === undefined) {
 					return {
 						ok: false,
-						error: "RoomId and UserId don't exist.",
+						error: "userid or roomId is required.",
 					};
 				}
-				if (roomId && userId) {
-					return {
-						ok: false,
-						error: "Room Id and User Id co-exist.",
-					};
-				}
+				// userId & roomId can co-exist
 				if (userId) {
-					// 내가 그 사람을 follow하고 있는 경우에만 방을 만들 수 있음
 					const user = await client.user.findFirst({
-						where: { id: userId, followers: { some: { id: loggedInUser.id } } },
-						select: { id: true },
-					});
-					if (!user) {
-						return {
-							ok: false,
-							error: "The user does not exist.",
-						};
-					}
-
-					// 방이 이미 존재하는지 확인
-					const existRoom = await client.room.findFirst({
 						where: {
-							id: roomId,
-							users: {
+							id: userId,
+							followers: {
 								some: {
-									id: userId,
+									id: loggedInUser.id,
 								},
 							},
 						},
@@ -46,22 +27,48 @@ export default {
 							id: true,
 						},
 					});
-					if (existRoom) {
+					if (!user) {
 						return {
 							ok: false,
-							error: "The Room already exist.",
+							error: "user doesn't exist.",
 						};
 					}
-					// --------------------
-					room = await client.room.create({
-						data: {
-							users: { connect: [{ id: userId }, { id: loggedInUser.id }] },
+					// find existing room with this user
+					room = await client.room.findFirst({
+						where: {
+							AND: [
+								{ users: { some: { id: userId } } },
+								{ users: { some: { id: loggedInUser.id } } },
+							],
+						},
+						select: {
+							id: true,
 						},
 					});
+					// if no room, create
+					if (!room) {
+						room = await client.room.create({
+							data: {
+								users: {
+									connect: [{ id: userId }, { id: loggedInUser.id }],
+								},
+							},
+						});
+					}
+					// definately, there is room, but is that room contain us ?
 				} else if (roomId) {
-					room = await client.room.findUnique({
-						where: { id: roomId },
-						select: { id: true },
+					room = await client.room.findFirst({
+						where: {
+							id: roomId,
+							users: {
+								some: {
+									id: loggedInUser.id,
+								},
+							},
+						},
+						select: {
+							id: true,
+						},
 					});
 				}
 				if (!room) {
@@ -70,8 +77,7 @@ export default {
 						error: "Room not found.",
 					};
 				}
-
-				const message = await client.message.create({
+				await client.message.create({
 					data: {
 						payload,
 						room: {
@@ -86,7 +92,6 @@ export default {
 						},
 					},
 				});
-				pubsub.publish(NEW_MESSAGE, { roomUpdates: { ...message } });
 				return {
 					ok: true,
 				};
@@ -94,3 +99,5 @@ export default {
 		),
 	},
 };
+
+export default resolvers;
