@@ -28,6 +28,7 @@ Instaclone Backend.
 - [x] See Feed
 - [x] See Photo Comments
 - [x] Delete Photo
+- [ ] AWS S3 delete
 
 ## Comments
 

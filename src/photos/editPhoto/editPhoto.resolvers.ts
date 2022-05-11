@@ -20,7 +20,7 @@ export default {
 				if (caption) {
 					hashtagsObjs = makeHashtags(caption);
 				}
-				const newPhoto = await client.photo.update({
+				await client.photo.update({
 					where: { id },
 					data: {
 						caption,
@@ -30,7 +30,6 @@ export default {
 						},
 					},
 				});
-				console.log(newPhoto);
 				return {
 					ok: true,
 				};

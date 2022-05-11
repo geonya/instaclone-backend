@@ -1,14 +1,15 @@
 import client from "../client";
+import { Resolvers } from "../types";
 
-export default {
+const resolvers: Resolvers = {
 	Photo: {
-		user: ({ userId }) =>
+		user: ({ userId }, _: any, { client }) =>
 			client.user.findUnique({
 				where: {
 					id: userId,
 				},
 			}),
-		hashtags: ({ id }) =>
+		hashtags: ({ id }, _: any, { client }) =>
 			client.hashtag.findMany({
 				where: {
 					photos: {
@@ -18,19 +19,32 @@ export default {
 					},
 				},
 			}),
-		likes: ({ id }) => client.like.count({ where: { photoId: id } }),
-		comments: ({ id }) =>
+		likes: ({ id }, _: any, { client }) =>
+			client.like.count({ where: { photoId: id } }),
+		comments: ({ id }, _: any, { client }) =>
 			client.comment.count({
 				where: {
 					photoId: id,
 				},
 			}),
-		isMine: ({ userId }, _: any, { loggedInUser }) =>
-			// if loggedInUser null ?
-			userId === loggedInUser?.id,
+		isMine: ({ userId }, _: any, { loggedInUser }) => {
+			if (!loggedInUser) return false;
+			return userId === loggedInUser?.id;
+		},
+		isLiked: async ({ id }, _: any, { loggedInUser }) => {
+			if (!loggedInUser) return false;
+			const ok = await client.like.findUnique({
+				where: { photoId_userId: { photoId: id, userId: loggedInUser.id } },
+				select: {
+					id: true,
+				},
+			});
+			if (ok) return true;
+			return false;
+		},
 	},
 	Hashtag: {
-		photos: ({ id }, { page }) =>
+		photos: ({ id }, { page }, { client }) =>
 			client.hashtag
 				.findUnique({
 					where: {
@@ -53,3 +67,4 @@ export default {
 			}),
 	},
 };
+export default resolvers;
