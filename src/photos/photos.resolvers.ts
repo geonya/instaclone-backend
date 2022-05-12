@@ -21,11 +21,12 @@ const resolvers: Resolvers = {
 			}),
 		likes: ({ id }, _: any, { client }) =>
 			client.like.count({ where: { photoId: id } }),
+		commentsCount: ({ id }, _: any, { client }) =>
+			client.comment.count({ where: { photoId: id } }),
 		comments: ({ id }, _: any, { client }) =>
-			client.comment.count({
-				where: {
-					photoId: id,
-				},
+			client.comment.findMany({
+				where: { photoId: id },
+				include: { user: true },
 			}),
 		isMine: ({ userId }, _: any, { loggedInUser }) => {
 			if (!loggedInUser) return false;
@@ -33,13 +34,13 @@ const resolvers: Resolvers = {
 		},
 		isLiked: async ({ id }, _: any, { loggedInUser }) => {
 			if (!loggedInUser) return false;
-			const ok = await client.like.findUnique({
+			const prevLike = await client.like.findUnique({
 				where: { photoId_userId: { photoId: id, userId: loggedInUser.id } },
 				select: {
 					id: true,
 				},
 			});
-			if (ok) return true;
+			if (prevLike) return true;
 			return false;
 		},
 	},
