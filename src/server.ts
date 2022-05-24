@@ -10,28 +10,47 @@ import { createServer } from "http";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/lib/use/ws";
+import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
+const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 const startServer = async () => {
 	const app = express();
 	app.use(logger("dev")); // logger should be on top
 	app.use(graphqlUploadExpress());
 	app.use("/static", express.static("uploads"));
-	const schema = makeExecutableSchema({ typeDefs, resolvers });
 	const httpServer = createServer(app);
 	const wsServer = new WebSocketServer({
 		server: httpServer,
 		path: "/graphql",
 	});
-
+	const getDynamicContext = async (ctx, msg, args) => {
+		if (ctx.connectionParams.token) {
+			const loggedInUser = await getUser(ctx.connectionParams.token);
+			return { loggedInUser, client };
+		}
+		return { loggedInUser: null };
+	};
 	const serverCleanup = useServer(
 		{
 			schema,
+			onConnect: async (ctx) => {
+				if (!ctx.connectionParams.token) {
+					console.log(ctx.connectionParams);
+					throw new Error("Auth token missing!");
+				}
+			},
+			onDisconnect: (ctx, code, reason) => {
+				console.log("DisConnected!");
+			},
+			context: (ctx, msg, args) => {
+				return getDynamicContext(ctx, msg, args);
+			},
 		},
 		wsServer
 	);
-
-	const apolloServer = new ApolloServer({
+	const server = new ApolloServer({
 		schema,
+		csrfPrevention: true,
 		context: async ({ req }) => {
 			if (req) {
 				return {
@@ -41,6 +60,7 @@ const startServer = async () => {
 			}
 		},
 		plugins: [
+			ApolloServerPluginDrainHttpServer({ httpServer }),
 			{
 				async serverWillStart() {
 					return {
@@ -52,13 +72,17 @@ const startServer = async () => {
 			},
 		],
 	});
+	await server.start();
+	server.applyMiddleware({ app });
 
-	await apolloServer.start();
-	apolloServer.applyMiddleware({ app });
-	httpServer.listen(process.env.PORT, () =>
+	httpServer.listen(process.env.PORT, () => {
 		console.log(
-			`🚀 Server ready at http://localhost:${process.env.PORT}${apolloServer.graphqlPath} ✅`
-		)
-	);
+			`🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath} ✅`
+		);
+		console.log(
+			`🚀 Subscription endpoint ready at ws://localhost:${process.env.PORT}${server.graphqlPath}`
+		);
+	});
 };
+
 startServer();
