@@ -1,3 +1,5 @@
+import { FOLLOW } from "../../constants";
+import pubsub from "../../pubsub";
 import { protectedResolver } from "../users.utils";
 
 export default {
@@ -16,7 +18,7 @@ export default {
 						error: "that user does not exist.",
 					};
 				}
-				const followUser = await client.user.update({
+				await client.user.update({
 					where: {
 						id: loggedInUser.id,
 					},
@@ -26,6 +28,13 @@ export default {
 								username,
 							},
 						},
+					},
+				});
+				pubsub.publish(FOLLOW, {
+					followUpdates: {
+						targetName: username,
+						followerName: loggedInUser.username,
+						avatar: loggedInUser.avatar,
 					},
 				});
 				return {

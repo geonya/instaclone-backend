@@ -10,6 +10,8 @@ import { createServer } from "http";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { SubscriptionServer } from "subscriptions-transport-ws";
 import { execute, subscribe } from "graphql/execution";
+import { WebSocketServer } from "ws";
+import { useServer } from "graphql-ws/lib/use/ws";
 
 const startServer = async () => {
 	const app = express();
@@ -18,25 +20,33 @@ const startServer = async () => {
 	app.use("/static", express.static("uploads"));
 	const schema = makeExecutableSchema({ typeDefs, resolvers });
 	const httpServer = createServer(app);
-	const subscriptionServer = SubscriptionServer.create(
+	const wsServer = new WebSocketServer({
+		server: httpServer,
+		path: "/graphql",
+	});
+	const serverCleanup = useServer({ schema }, wsServer);
+
+	const getDynamicContext = async (ctx, msg, args) => {
+		if (ctx.connectionParams.token) {
+			const loggedInUser = await getUser(ctx.connectionParams.token);
+			return {
+				loggedInUser,
+				client,
+			};
+		}
+		return { loggedInUser: null };
+	};
+
+	useServer(
 		{
 			schema,
-			execute,
-			subscribe,
-			// onConnect 는 첫 번재 인자로 HTTP Headers 를 가져옴
-			onConnect: async ({ token }) => {
-				if (!token) {
-					throw new Error("You are not athorized.");
-				}
-				const loggedInUser = await getUser(token);
-				return {
-					loggedInUser,
-					client,
-				};
+			context: (ctx, msg, args) => {
+				return getDynamicContext(ctx, msg, args);
 			},
 		},
-		{ server: httpServer, path: "/graphql" }
+		wsServer
 	);
+
 	const apolloServer = new ApolloServer({
 		schema,
 		context: async ({ req }) => {
@@ -52,13 +62,14 @@ const startServer = async () => {
 				async serverWillStart() {
 					return {
 						async drainServer() {
-							subscriptionServer.close();
+							await serverCleanup.dispose();
 						},
 					};
 				},
 			},
 		],
 	});
+
 	await apolloServer.start();
 	apolloServer.applyMiddleware({ app });
 	httpServer.listen(process.env.PORT, () =>
