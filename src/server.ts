@@ -8,8 +8,6 @@ import * as express from "express";
 import * as logger from "morgan";
 import { createServer } from "http";
 import { makeExecutableSchema } from "@graphql-tools/schema";
-import { SubscriptionServer } from "subscriptions-transport-ws";
-import { execute, subscribe } from "graphql/execution";
 import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/lib/use/ws";
 
@@ -24,25 +22,10 @@ const startServer = async () => {
 		server: httpServer,
 		path: "/graphql",
 	});
-	const serverCleanup = useServer({ schema }, wsServer);
 
-	const getDynamicContext = async (ctx, msg, args) => {
-		if (ctx.connectionParams.token) {
-			const loggedInUser = await getUser(ctx.connectionParams.token);
-			return {
-				loggedInUser,
-				client,
-			};
-		}
-		return { loggedInUser: null };
-	};
-
-	useServer(
+	const serverCleanup = useServer(
 		{
 			schema,
-			context: (ctx, msg, args) => {
-				return getDynamicContext(ctx, msg, args);
-			},
 		},
 		wsServer
 	);
