@@ -16,7 +16,7 @@ export default {
 						error: "that user does not exist.",
 					};
 				}
-				await client.user.update({
+				const followUser = await client.user.update({
 					where: {
 						id: loggedInUser.id,
 					},

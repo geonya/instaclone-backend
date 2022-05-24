@@ -1,5 +1,9 @@
-export default {
+import { Resolvers } from "../types";
+
+const resolvers: Resolvers = {
 	User: {
+		totalPhotos: ({ id }, _: any, { client }) =>
+			client.photo.count({ where: { userId: id } }),
 		totalFollowing: ({ id }, _: any, { client }) =>
 			client.user.count({
 				where: {
@@ -39,3 +43,5 @@ export default {
 				.photos(),
 	},
 };
+
+export default resolvers;

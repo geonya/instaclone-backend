@@ -29,7 +29,7 @@ export default {
 						}
 					}
 				)(_, { id }, { loggedInUser, client });
-				// function 의 호출 결과를 return 해야 하기 때문
+				// function 의 호출 결과를 return 해야 하기 때문 // function을 리턴하는 것이 아니라 함수의 리턴값을 리턴해야하기 때문
 			},
 		},
 	},

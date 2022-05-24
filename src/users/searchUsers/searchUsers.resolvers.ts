@@ -11,17 +11,56 @@ export default {
 					OR: [
 						{
 							username: {
-								startsWith: keyword.toLowerCase(),
+								startsWith: keyword,
+								mode: "insensitive",
+							},
+						},
+						{
+							username: {
+								contains: keyword,
+								mode: "insensitive",
+							},
+						},
+						{
+							username: {
+								endsWith: keyword,
+								mode: "insensitive",
 							},
 						},
 						{
 							firstName: {
-								startsWith: keyword.toLowerCase(),
+								startsWith: keyword,
+								mode: "insensitive",
+							},
+						},
+						{
+							firstName: {
+								contains: keyword,
+								mode: "insensitive",
+							},
+						},
+						{
+							firstName: {
+								endsWith: keyword,
+								mode: "insensitive",
 							},
 						},
 						{
 							lastName: {
-								startsWith: keyword.toLowerCase(),
+								startsWith: keyword,
+								mode: "insensitive",
+							},
+						},
+						{
+							lastName: {
+								contains: keyword,
+								mode: "insensitive",
+							},
+						},
+						{
+							lastName: {
+								endsWith: keyword,
+								mode: "insensitive",
 							},
 						},
 					],

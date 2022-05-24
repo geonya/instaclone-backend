@@ -3,9 +3,26 @@ export default {
 		searchPhotos: (_: any, { keyword }, { client }) =>
 			client.photo.findMany({
 				where: {
-					caption: {
-						startsWith: keyword,
-					},
+					OR: [
+						{
+							caption: {
+								startsWith: keyword,
+								mode: "insensitive",
+							},
+						},
+						{
+							caption: {
+								contains: keyword,
+								mode: "insensitive",
+							},
+						},
+						{
+							caption: {
+								endsWith: keyword,
+								mode: "insensitive",
+							},
+						},
+					],
 				},
 			}),
 	},
