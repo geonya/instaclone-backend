@@ -31,6 +31,8 @@ const resolvers: Resolvers = {
 	Message: {
 		user: ({ id }, _: any, { client }) =>
 			client.message.findUnique({ where: { id } }).user(),
+		isMine: ({ userId }, _: any, { loggedInUser }) =>
+			loggedInUser ? loggedInUser.id === userId : false,
 	},
 };
 

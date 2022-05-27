@@ -7,6 +7,7 @@ export default gql`
 		user: User!
 		room: Room!
 		read: Boolean!
+		isMine: Boolean!
 		createdAt: String!
 		updatedAt: String!
 	}

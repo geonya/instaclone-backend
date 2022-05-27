@@ -1,7 +1,7 @@
 {
-	"name": "instaclone",
+	"name": "instaclone-backend",
 	"version": "1.0.0",
-	"description": "",
+	"description": "instaclone-backend",
 	"scripts": {
 		"dev": "nodemon --exec ts-node src/server --ext ts,js --delay 2",
 		"migrate": "npx prisma migrate dev --preview-feature",
@@ -11,7 +11,6 @@
 		"type": "git",
 		"url": "git+https://github.com/geonya/instaclone-backend.git"
 	},
-	"keywords": [],
 	"author": "geony",
 	"license": "MIT",
 	"bugs": {
