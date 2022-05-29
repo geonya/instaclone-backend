@@ -53,3 +53,7 @@ Instaclone Backend.
 - [x] Computed Fields (Seen 기능)
 - [x] see (Read) Messages
 - [x] Realtime Messages(GraphQL Subscription)
+
+## Deploy
+
+- [ ] build
