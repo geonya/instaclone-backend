@@ -11,6 +11,8 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/lib/use/ws";
 import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
+
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 const startServer = async () => {
@@ -61,6 +63,7 @@ const startServer = async () => {
 			}
 		},
 		plugins: [
+			ApolloServerPluginLandingPageGraphQLPlayground(),
 			ApolloServerPluginDrainHttpServer({ httpServer }),
 			{
 				async serverWillStart() {
