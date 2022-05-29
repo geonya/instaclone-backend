@@ -1,9 +1,10 @@
-import * as bcrypt from "bcrypt";
+import bcrypt from "bcrypt";
 import { GraphQLUpload } from "graphql-upload";
 import { protectedResolver } from "../users.utils";
 import { uploadToS3 } from "../../shared/shared.utils";
+import { Resolvers } from "../../types";
 
-export default {
+const resolver: Resolvers = {
 	Mutation: {
 		editProfile: protectedResolver(
 			async (
@@ -54,5 +55,7 @@ export default {
 			}
 		),
 	},
-	Upload: GraphQLUpload,
+	Upload: GraphQLUpload as any,
 };
+
+export default resolver;

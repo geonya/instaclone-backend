@@ -1,8 +1,9 @@
 import { FOLLOW } from "../../constants";
 import pubsub from "../../pubsub";
 import { protectedResolver } from "../users.utils";
+import { Resolvers } from "../../types";
 
-export default {
+const resolvers: Resolvers = {
 	Mutation: {
 		followUser: protectedResolver(
 			async (_, { username }, { loggedInUser, client }) => {
@@ -44,3 +45,4 @@ export default {
 		),
 	},
 };
+export default resolvers;

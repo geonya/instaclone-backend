@@ -1,9 +1,14 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
-		"outDir": "./built",
-		"allowJs": true,
-		"target": "es2017"
+		"module": "CommonJS",
+		"sourceMap": true,
+		"outDir": "build",
+		"target": "es5",
+		"strict": true,
+		"lib": ["esnext"],
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"skipLibCheck": true
 	},
 	"include": ["src/**/*"],
 	"exclude": ["node_modules"]

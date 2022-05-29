@@ -5,7 +5,7 @@ import pubsub from "../../pubsub";
 export default {
 	Subscription: {
 		followUpdates: {
-			subscribe: async (_: any, __: any, { loggedInUser }) => {
+			subscribe: async (_: any, __: any, { loggedInUser }: any) => {
 				if (!loggedInUser) throw new Error("You need to login");
 				return withFilter(
 					() => pubsub.asyncIterator(FOLLOW),

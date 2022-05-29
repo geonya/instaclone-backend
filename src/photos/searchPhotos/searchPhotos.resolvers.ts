@@ -1,4 +1,6 @@
-export default {
+import { Resolvers } from "../../types";
+
+const resolvers: Resolvers = {
 	Query: {
 		searchPhotos: (_: any, { keyword }, { client }) =>
 			client.photo.findMany({
@@ -27,3 +29,4 @@ export default {
 			}),
 	},
 };
+export default resolvers;

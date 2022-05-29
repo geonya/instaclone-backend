@@ -1,6 +1,7 @@
+import { Resolvers } from "../../types";
 import { protectedResolver } from "../../users/users.utils";
 
-export default {
+const resolvers: Resolvers = {
 	Query: {
 		seeFeed: protectedResolver((_: any, { offset }, { client, loggedInUser }) =>
 			client.photo.findMany({
@@ -29,3 +30,4 @@ export default {
 		),
 	},
 };
+export default resolvers;

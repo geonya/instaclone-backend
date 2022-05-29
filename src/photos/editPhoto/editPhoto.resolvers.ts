@@ -1,7 +1,8 @@
+import { Resolvers } from "../../types";
 import { protectedResolver } from "../../users/users.utils";
 import { makeHashtags } from "../photos.utils";
 
-export default {
+const resolvers: Resolvers = {
 	Mutation: {
 		editPhoto: protectedResolver(
 			async (_: any, { id, caption }, { client, loggedInUser }) => {
@@ -16,7 +17,7 @@ export default {
 					},
 				});
 				if (!oldPhoto) return { ok: false, error: "Photo not found!" };
-				let hashtagsObjs = [];
+				let hashtagsObjs: any[] = [];
 				if (caption) {
 					hashtagsObjs = makeHashtags(caption);
 				}
@@ -37,3 +38,4 @@ export default {
 		),
 	},
 };
+export default resolvers;

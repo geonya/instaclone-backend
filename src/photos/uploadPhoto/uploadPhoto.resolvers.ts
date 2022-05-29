@@ -1,12 +1,16 @@
 import { uploadToS3 } from "../../shared/shared.utils";
 import { protectedResolver } from "../../users/users.utils";
 import { makeHashtags } from "../photos.utils";
+import { Resolvers } from "../../types";
 
-export default {
+const resolvers: Resolvers = {
 	Mutation: {
 		uploadPhoto: protectedResolver(
 			async (_, { file, caption }, { loggedInUser, client }) => {
-				let hashtagsObjs = [];
+				let hashtagsObjs: {
+					where: { hashtag: string };
+					create: { hashtag: string };
+				}[] = [];
 				if (caption) {
 					hashtagsObjs = makeHashtags(caption);
 				}
@@ -32,3 +36,4 @@ export default {
 		),
 	},
 };
+export default resolvers;

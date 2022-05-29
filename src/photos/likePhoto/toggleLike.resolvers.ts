@@ -1,6 +1,7 @@
+import { Resolvers } from "../../types";
 import { protectedResolver } from "../../users/users.utils";
 
-export default {
+const resolvers: Resolvers = {
 	Mutation: {
 		toggleLike: protectedResolver(
 			async (_, { id }, { client, loggedInUser }) => {
@@ -46,3 +47,4 @@ export default {
 		),
 	},
 };
+export default resolvers;

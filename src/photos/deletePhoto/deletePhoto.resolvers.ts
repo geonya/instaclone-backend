@@ -1,6 +1,7 @@
+import { Resolvers } from "../../types";
 import { protectedResolver } from "../../users/users.utils";
 
-export default {
+const resolvers: Resolvers = {
 	Mutation: {
 		deletePhoto: protectedResolver(
 			async (_: any, { id }, { client, loggedInUser }) => {
@@ -28,3 +29,4 @@ export default {
 		),
 	},
 };
+export default resolvers;

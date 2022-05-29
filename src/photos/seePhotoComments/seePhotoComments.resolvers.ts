@@ -1,4 +1,6 @@
-export default {
+import { Resolvers } from "../../types";
+
+const resolvers: Resolvers = {
 	Query: {
 		seePhotoComments: (_: any, { id, lastId }, { client }) =>
 			client.comment.findMany({
@@ -14,3 +16,4 @@ export default {
 			}),
 	},
 };
+export default resolvers;

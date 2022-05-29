@@ -1,4 +1,6 @@
-export default {
+import { Resolvers } from "../../types";
+
+const resolvers: Resolvers = {
 	Query: {
 		seePhotoLikes: async (_: any, { id }, { client }) => {
 			const likes = await client.like.findMany({
@@ -13,3 +15,4 @@ export default {
 		},
 	},
 };
+export default resolvers;

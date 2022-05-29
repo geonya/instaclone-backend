@@ -1,4 +1,6 @@
-export default {
+import { Resolvers } from "../../types";
+
+const resolvers: Resolvers = {
 	Query: {
 		seePhoto: (_: any, { id }, { client }) =>
 			client.photo.findUnique({
@@ -8,3 +10,4 @@ export default {
 			}),
 	},
 };
+export default resolvers;

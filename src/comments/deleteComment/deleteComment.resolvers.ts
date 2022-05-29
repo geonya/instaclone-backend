@@ -1,6 +1,7 @@
 import { protectedResolver } from "../../users/users.utils";
+import { Resolvers } from "../../types";
 
-export default {
+const resolvers: Resolvers = {
 	Mutation: {
 		deleteComment: protectedResolver(
 			async (_: any, { id }, { client, loggedInUser }) => {
@@ -28,3 +29,4 @@ export default {
 		),
 	},
 };
+export default resolvers;

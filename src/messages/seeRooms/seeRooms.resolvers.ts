@@ -1,7 +1,8 @@
 import client from "../../client";
 import { protectedResolver } from "../../users/users.utils";
+import { Resolvers } from "../../types";
 
-export default {
+const resolvers: Resolvers = {
 	Query: {
 		seeRooms: protectedResolver(async (_: any, __: any, { loggedInUser }) =>
 			client.room.findMany({
@@ -10,3 +11,4 @@ export default {
 		),
 	},
 };
+export default resolvers;

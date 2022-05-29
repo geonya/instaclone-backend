@@ -1,4 +1,6 @@
-export default {
+import { Resolvers } from "../../types";
+
+const resolvers: Resolvers = {
 	Query: {
 		searchUsers: async (_: any, { keyword, lastId }, { client }) => {
 			if (keyword.length < 2)
@@ -76,3 +78,4 @@ export default {
 		},
 	},
 };
+export default resolvers;
