@@ -53,7 +53,7 @@ const startServer = async () => {
 	const server = new ApolloServer({
 		schema,
 		csrfPrevention: true,
-		introspection: true,
+		// introspection: true, // for playground
 		context: async ({ req }) => {
 			if (req) {
 				return {
@@ -63,7 +63,7 @@ const startServer = async () => {
 			}
 		},
 		plugins: [
-			ApolloServerPluginLandingPageGraphQLPlayground(),
+			// ApolloServerPluginLandingPageGraphQLPlayground(), // for playground
 			ApolloServerPluginDrainHttpServer({ httpServer }),
 			{
 				async serverWillStart() {
