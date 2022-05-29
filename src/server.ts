@@ -51,6 +51,7 @@ const startServer = async () => {
 	const server = new ApolloServer({
 		schema,
 		csrfPrevention: true,
+		introspection: true,
 		context: async ({ req }) => {
 			if (req) {
 				return {
