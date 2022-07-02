@@ -1,29 +1,28 @@
-require("dotenv").config();
-import { ApolloServer } from "apollo-server-express";
-import client from "./client";
-import { typeDefs, resolvers } from "./schema";
-import { getUser } from "./users/users.utils";
-import { graphqlUploadExpress } from "graphql-upload";
-import express from "express";
-import logger from "morgan";
-import { createServer } from "http";
-import { makeExecutableSchema } from "@graphql-tools/schema";
-import { WebSocketServer } from "ws";
-import { useServer } from "graphql-ws/lib/use/ws";
-import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
-import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
+require('dotenv').config();
+import { ApolloServer } from 'apollo-server-express';
+import client from './client';
+import { typeDefs, resolvers } from './schema';
+import { getUser } from './users/users.utils';
+import { graphqlUploadExpress } from 'graphql-upload';
+import express from 'express';
+import logger from 'morgan';
+import { createServer } from 'http';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { WebSocketServer } from 'ws';
+import { useServer } from 'graphql-ws/lib/use/ws';
+import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 const startServer = async () => {
 	const app = express();
-	app.use(logger("dev"));
+	app.use(logger('dev'));
 	app.use(graphqlUploadExpress());
-	app.use("/static", express.static("uploads"));
+	app.use('/static', express.static('uploads'));
 	const httpServer = createServer(app);
 	const wsServer = new WebSocketServer({
 		server: httpServer,
-		path: "/graphql",
+		path: '/graphql',
 	});
 	const getDynamicContext = async (ctx: any, msg: any, args: any) => {
 		if (ctx.connectionParams.token) {
@@ -38,11 +37,11 @@ const startServer = async () => {
 			onConnect: async (ctx) => {
 				if (!ctx.connectionParams?.token) {
 					console.log(ctx.connectionParams);
-					throw new Error("BACK-END ERROR : Auth token missing! T^T ~~");
+					throw new Error('BACK-END ERROR : Auth token missing! T^T ~~');
 				}
 			},
 			onDisconnect: (ctx, code, reason) => {
-				console.log("DisConnected!");
+				console.log('DisConnected!');
 			},
 			context: (ctx, msg, args) => {
 				return getDynamicContext(ctx, msg, args);

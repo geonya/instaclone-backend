@@ -1,8 +1,8 @@
 import { Resolvers } from "../../types";
 
-const resolvers: Resolvers = {
+export const resolvers: Resolvers = {
 	Query: {
-		seePhoto: (_: any, { id }, { client }) =>
+		seePhoto: (_, { id }, { client }) =>
 			client.photo.findUnique({
 				where: {
 					id,
@@ -10,4 +10,3 @@ const resolvers: Resolvers = {
 			}),
 	},
 };
-export default resolvers;

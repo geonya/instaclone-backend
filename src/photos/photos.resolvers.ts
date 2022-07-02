@@ -1,5 +1,5 @@
-import client from "../client";
-import { Resolvers } from "../types";
+import client from '../client';
+import { Resolvers } from '../types';
 
 const resolvers: Resolvers = {
 	Photo: {
