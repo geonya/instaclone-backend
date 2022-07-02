@@ -20,8 +20,8 @@ model User {
   bio       String?
   avatar    String?
   photos    Photo[]
-  followers User[]    @relation("FollowRelation", references: [id])
-  following User[]    @relation("FollowRelation", references: [id])
+  followers User[]    @relation("FollowRelation")
+  following User[]    @relation("FollowRelation")
   likes     Like[]
   comments  Comment[]
   rooms     Room[]
